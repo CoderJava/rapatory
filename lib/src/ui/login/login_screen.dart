@@ -1,67 +1,139 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rapatory/src/widgets/widget_background_video.dart';
 
 class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: WavyHeaderImage(),
-    );
-  }
-}
-
-class WavyHeaderImage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return ClipPath(
-      child: Container(
-        width: double.infinity,
-        height: double.infinity,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Color(0xFF1B1829),
-              Color(0xFF231B32),
-            ],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
-        child: Image.asset(
-          'assets/images/astronaut.png',
-          fit: BoxFit.fitHeight,
-        ),
+      body: Stack(
+        children: <Widget>[
+          WidgetBackgroundVideo(),
+          _buildWidgetButtonLogin(),
+        ],
       ),
-      clipper: BottomWaveClipper(),
     );
   }
-}
 
-class BottomWaveClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    var path = Path();
-    path.lineTo(0.0, size.height / 3.5);
-
-    var firstControlPoint =
-        Offset(size.width - (size.width / 1.1), size.height / 1.8);
-    var firstEndPoint = Offset(size.width / 1.9, size.height / 1.9);
-    path.quadraticBezierTo(firstControlPoint.dx, firstControlPoint.dy,
-        firstEndPoint.dx, firstEndPoint.dy);
-
-    var secondControlPoint = Offset(size.width, size.height / 2.1);
-    var secondEndPoint = Offset(size.width, size.height / 1.5);
-    path.quadraticBezierTo(secondControlPoint.dx, secondControlPoint.dy,
-        secondEndPoint.dx, secondEndPoint.dy);
-
-    path.lineTo(size.width, size.height / 1.5);
-    path.lineTo(size.width, 0.0);
-    path.close();
-
-    return path;
+  Widget _buildWidgetButtonLogin() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 16.0,
+        vertical: 16.0,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          _buildwidgetButtonLoginTwitter(),
+          SizedBox(height: 8.0),
+          _buildWidgetButtonLoginFacebook(),
+          SizedBox(height: 8.0),
+          _buildWidgetButtonLoginGoogle(),
+        ],
+      ),
+    );
   }
 
-  @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) {
-    return false;
+  Widget _buildwidgetButtonLoginTwitter() {
+    return RaisedButton(
+      padding: EdgeInsets.zero,
+      onPressed: () {
+        // TODO: do something in here
+      },
+      child: Row(
+        children: <Widget>[
+          Container(
+            width: 42.0,
+            height: 42.0,
+            color: Colors.white.withOpacity(0.2),
+            child: Icon(
+              FontAwesomeIcons.twitter,
+              color: Colors.white,
+              size: 16.0,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              'Sign in with Twitter',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+      color: Color(0xFF00ACEE),
+    );
+  }
+
+  Widget _buildWidgetButtonLoginFacebook() {
+    return RaisedButton(
+      padding: EdgeInsets.zero,
+      onPressed: () {
+        // TODO: do something in here
+      },
+      child: Row(
+        children: <Widget>[
+          Container(
+            width: 42.0,
+            height: 42.0,
+            color: Colors.white.withOpacity(0.2),
+            child: Icon(
+              FontAwesomeIcons.facebookF,
+              color: Colors.white,
+              size: 16.0,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              'Sign in with Facebook',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          )
+        ],
+      ),
+      color: Color(0xFF3B5998),
+    );
+  }
+
+  Widget _buildWidgetButtonLoginGoogle() {
+    return RaisedButton(
+      padding: EdgeInsets.zero,
+      onPressed: () {
+        // TODO: do something in here
+      },
+      child: Row(
+        children: <Widget>[
+          Container(
+            width: 42.0,
+            height: 42.0,
+            color: Colors.white.withOpacity(0.2),
+            child: Icon(
+              FontAwesomeIcons.google,
+              color: Colors.white,
+              size: 16.0,
+            ),
+          ),
+          Expanded(
+            child: Text(
+              'Sign in with Google',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16.0,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+      color: Color(0xFF424242),
+    );
   }
 }

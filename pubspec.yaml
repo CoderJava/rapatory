@@ -13,6 +13,12 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.2
 
+  # Flutter plugin for displaying inline video with other Flutter widgets on Android and iOS.
+  video_player: ^0.10.2+1
+
+  # Font Awesome Icon pack available as Flutter Icons.
+  font_awesome_flutter: ^8.5.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -31,6 +37,7 @@ flutter:
 
   assets:
     - assets/images/
+    - assets/videos/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
