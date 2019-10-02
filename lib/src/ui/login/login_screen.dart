@@ -16,21 +16,23 @@ class LoginScreen extends StatelessWidget {
   }
 
   Widget _buildWidgetButtonLogin() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 16.0,
-        vertical: 16.0,
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          _buildwidgetButtonLoginTwitter(),
-          SizedBox(height: 8.0),
-          _buildWidgetButtonLoginFacebook(),
-          SizedBox(height: 8.0),
-          _buildWidgetButtonLoginGoogle(),
-        ],
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 16.0,
+          vertical: 16.0,
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            _buildwidgetButtonLoginTwitter(),
+            SizedBox(height: 8.0),
+            _buildWidgetButtonLoginFacebook(),
+            SizedBox(height: 8.0),
+            _buildWidgetButtonLoginGoogle(),
+          ],
+        ),
       ),
     );
   }
