@@ -1,4 +1,6 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_twitter_login/flutter_twitter_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rapatory/src/widgets/widget_background_video.dart';
 
@@ -26,7 +28,7 @@ class LoginScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.end,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            _buildwidgetButtonLoginTwitter(),
+            _buildWidgetButtonLoginTwitter(),
             SizedBox(height: 8.0),
             _buildWidgetButtonLoginFacebook(),
             SizedBox(height: 8.0),
@@ -37,11 +39,43 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildwidgetButtonLoginTwitter() {
+  Widget _buildWidgetButtonLoginTwitter() {
     return RaisedButton(
       padding: EdgeInsets.zero,
-      onPressed: () {
-        // TODO: do something in here
+      onPressed: () async {
+        var twitterLogin = TwitterLogin(
+          consumerKey: '0LFgIbMd0onKleprkoGvVWv0J',
+          consumerSecret: 'KzqzH7JnsQjzfDGT49fPsvRI6mqarj5YJhAxQBEixy0zgD4H6l',
+        );
+        final TwitterLoginResult result = await twitterLogin.authorize();
+        switch (result.status) {
+          case TwitterLoginStatus.loggedIn:
+            var session = result.session;
+            var token = session.token;
+            var secret = session.secret;
+            print('token: ${session.token} & secret: ${session.secret}');
+            print('userId: ${session.userId} & username: ${session.username}');
+
+            FirebaseAuth auth = FirebaseAuth.instance;
+            AuthCredential credential = TwitterAuthProvider.getCredential(authToken: token, authTokenSecret: secret);
+            FirebaseUser user = (await auth.signInWithCredential(credential)).user;
+            FirebaseUser currentUser = await auth.currentUser();
+            if (user != null) {
+              print('Successfully signed with Twitter. ${user.uid}');
+              print('email: ${user.email}');
+              print('photo profile: ${user.photoUrl}');
+              print('display name: ${user.displayName}');
+            } else {
+              print('Failed to sign in Twitter.') ;
+            }
+            break;
+          case TwitterLoginStatus.cancelledByUser:
+            print('cancelled by user');
+            break;
+          case TwitterLoginStatus.error:
+            print('error twitter: ${result.errorMessage}');
+            break;
+        }
       },
       child: Row(
         children: <Widget>[

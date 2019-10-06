@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "930927884979",
+    "firebase_url": "https://rapatory.firebaseio.com",
+    "project_id": "rapatory",
+    "storage_bucket": "rapatory.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:930927884979:android:3185889e8082af2ea84ec6",
+        "android_client_info": {
+          "package_name": "com.ysn.rapatory"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "930927884979-s3b9co4f3o52b4j4inu2nbgcavh1hb7c.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ysn.rapatory",
+            "certificate_hash": "ca35e06d3488b960a5647bbedd213b5d30a0f8fc"
+          }
+        },
+        {
+          "client_id": "930927884979-85hp50bdiql60399ck1cd0ufieeslkr9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDM6b18WPKYm1oPelNN2WOgIqamoEFVA3c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "930927884979-85hp50bdiql60399ck1cd0ufieeslkr9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

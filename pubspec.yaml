@@ -19,6 +19,10 @@ dependencies:
   # Font Awesome Icon pack available as Flutter Icons.
   font_awesome_flutter: ^8.5.0
 
+  flutter_twitter_login: ^1.1.0
+
+  firebase_auth: ^0.14.0+5
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
