@@ -26,6 +26,9 @@ dependencies:
   # phone numbers and identity providers like Google, Facebook and Twitter.
   firebase_auth: ^0.14.0+5
 
+  # Flutter plugin for using the native Facebook Login SDKs on Android and iOS.
+  flutter_facebook_login: ^3.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

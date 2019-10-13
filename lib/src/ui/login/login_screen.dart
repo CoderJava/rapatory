@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_twitter_login/flutter_twitter_login.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rapatory/src/widgets/widget_background_video.dart';
@@ -111,8 +112,23 @@ class LoginScreen extends StatelessWidget {
   Widget _buildWidgetButtonLoginFacebook() {
     return RaisedButton(
       padding: EdgeInsets.zero,
-      onPressed: () {
-        // TODO: do something in here
+      onPressed: () async {
+        final facebookLogin = FacebookLogin();
+        final result = await facebookLogin.logIn(['email']);
+        switch (result.status) {
+          case FacebookLoginStatus.loggedIn:
+            print('access token: ${result.accessToken.token}');
+            // TODO: do something in here
+            break;
+          case FacebookLoginStatus.cancelledByUser:
+            print('cancelled by user');
+            // TODO: do something in here
+            break;
+          case FacebookLoginStatus.error:
+            print('facebook login error: ${result.errorMessage}');
+            // TODO: do something in here
+            break;
+        }
       },
       child: Row(
         children: <Widget>[
