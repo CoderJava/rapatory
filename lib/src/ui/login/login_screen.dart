@@ -1,14 +1,18 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_login/flutter_facebook_login.dart';
-import 'package:flutter_twitter_login/flutter_twitter_login.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:rapatory/src/bloc/login/login_bloc.dart';
 import 'package:rapatory/src/widgets/widget_background_video.dart';
+import 'package:rapatory/src/widgets/widget_loading_screen.dart';
+
+var _scaffoldState = GlobalKey<ScaffoldState>();
 
 class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldState,
       body: Stack(
         children: <Widget>[
           WidgetBackgroundVideo(),
@@ -19,67 +23,72 @@ class LoginScreen extends StatelessWidget {
   }
 
   Widget _buildWidgetButtonLogin() {
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 16.0,
-          vertical: 16.0,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            _buildWidgetButtonLoginTwitter(),
-            SizedBox(height: 8.0),
-            _buildWidgetButtonLoginFacebook(),
-            SizedBox(height: 8.0),
-            _buildWidgetButtonLoginGoogle(),
-          ],
+    return BlocProvider(
+      builder: (context) {
+        return LoginBloc();
+      },
+      child: BlocListener<LoginBloc, LoginState>(
+        listener: (context, state) {
+          _checkListenerStatusLogin(state);
+        },
+        child: BlocBuilder<LoginBloc, LoginState>(
+          builder: (context, state) {
+            return SafeArea(
+              child: Stack(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0,
+                      vertical: 16.0,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: <Widget>[
+                        _buildWidgetButtonLoginTwitter(context),
+                        SizedBox(height: 8.0),
+                        _buildWidgetButtonLoginFacebook(),
+                        SizedBox(height: 8.0),
+                        _buildWidgetButtonLoginGoogle(),
+                      ],
+                    ),
+                  ),
+                  _checkWidgetStatusLogin(state),
+                ],
+              ),
+            );
+          },
         ),
       ),
     );
   }
 
-  Widget _buildWidgetButtonLoginTwitter() {
+  Widget _checkWidgetStatusLogin(LoginState loginState) {
+    if (loginState is LoginLoading) {
+      return WidgetLoadingScreen();
+    } else {
+      return Container();
+    }
+  }
+
+  _checkListenerStatusLogin(LoginState state) {
+    if (state is LoginFailed) {
+      _scaffoldState.currentState.showSnackBar(
+        SnackBar(
+          content: Text('${state.errorMessage}'),
+        ),
+      );
+    } else if (state is LoginSuccess) {
+      Navigator.pushNamed(_scaffoldState.currentContext, '/home');
+    }
+  }
+
+  Widget _buildWidgetButtonLoginTwitter(BuildContext context) {
     return RaisedButton(
       padding: EdgeInsets.zero,
-      onPressed: () async {
-        var twitterLogin = TwitterLogin(
-          consumerKey: '0LFgIbMd0onKleprkoGvVWv0J',
-          consumerSecret: 'KzqzH7JnsQjzfDGT49fPsvRI6mqarj5YJhAxQBEixy0zgD4H6l',
-        );
-        final TwitterLoginResult result = await twitterLogin.authorize();
-        switch (result.status) {
-          case TwitterLoginStatus.loggedIn:
-            var session = result.session;
-            var token = session.token;
-            var secret = session.secret;
-            print('token: ${session.token} & secret: ${session.secret}');
-            print('userId: ${session.userId} & username: ${session.username}');
-
-            FirebaseAuth auth = FirebaseAuth.instance;
-            AuthCredential credential = TwitterAuthProvider.getCredential(authToken: token, authTokenSecret: secret);
-            FirebaseUser user = (await auth.signInWithCredential(credential)).user;
-            if (user != null) {
-              print('Successfully signed with Twitter. ${user.uid}');
-              print('email: ${user.email}');
-              print('photo profile: ${user.photoUrl}');
-              print('display name: ${user.displayName}');
-              // TODO: do something in here
-            } else {
-              print('Failed to sign in Twitter.') ;
-              // TODO: do something in here
-            }
-            break;
-          case TwitterLoginStatus.cancelledByUser:
-            print('cancelled by user');
-            // TODO: do something in here
-            break;
-          case TwitterLoginStatus.error:
-            print('error twitter: ${result.errorMessage}');
-            // TODO: do something in here
-            break;
-        }
+      onPressed: () {
+        final LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
+        loginBloc.dispatch(LoginEvent(typeLogin: TypeLogin.twitter));
       },
       child: Row(
         children: <Widget>[
@@ -112,23 +121,8 @@ class LoginScreen extends StatelessWidget {
   Widget _buildWidgetButtonLoginFacebook() {
     return RaisedButton(
       padding: EdgeInsets.zero,
-      onPressed: () async {
-        final facebookLogin = FacebookLogin();
-        final result = await facebookLogin.logIn(['email']);
-        switch (result.status) {
-          case FacebookLoginStatus.loggedIn:
-            print('access token: ${result.accessToken.token}');
-            // TODO: do something in here
-            break;
-          case FacebookLoginStatus.cancelledByUser:
-            print('cancelled by user');
-            // TODO: do something in here
-            break;
-          case FacebookLoginStatus.error:
-            print('facebook login error: ${result.errorMessage}');
-            // TODO: do something in here
-            break;
-        }
+      onPressed: () {
+        // TODO: do something in here
       },
       child: Row(
         children: <Widget>[

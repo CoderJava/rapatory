@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rapatory/res/values/color_app.dart';
+import 'package:rapatory/src/ui/home/home_screen.dart';
 import 'package:rapatory/src/ui/login/login_screen.dart';
 
 class App extends StatelessWidget {
@@ -10,6 +11,9 @@ class App extends StatelessWidget {
         primaryColor: ColorApp.colorPrimary,
         accentColor: ColorApp.colorAccent,
       ),
+      routes: {
+        "/home": (context) => HomeScreen()
+      },
       home: LoginScreen(),
     );
   }
