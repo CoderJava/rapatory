@@ -59,21 +59,24 @@ class LoginScreen extends StatelessWidget {
             FirebaseAuth auth = FirebaseAuth.instance;
             AuthCredential credential = TwitterAuthProvider.getCredential(authToken: token, authTokenSecret: secret);
             FirebaseUser user = (await auth.signInWithCredential(credential)).user;
-            FirebaseUser currentUser = await auth.currentUser();
             if (user != null) {
               print('Successfully signed with Twitter. ${user.uid}');
               print('email: ${user.email}');
               print('photo profile: ${user.photoUrl}');
               print('display name: ${user.displayName}');
+              // TODO: do something in here
             } else {
               print('Failed to sign in Twitter.') ;
+              // TODO: do something in here
             }
             break;
           case TwitterLoginStatus.cancelledByUser:
             print('cancelled by user');
+            // TODO: do something in here
             break;
           case TwitterLoginStatus.error:
             print('error twitter: ${result.errorMessage}');
+            // TODO: do something in here
             break;
         }
       },
