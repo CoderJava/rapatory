@@ -3,12 +3,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rapatory/src/bloc/login/login_bloc.dart';
+import 'package:rapatory/src/bloc/splash/splash_bloc.dart';
 import 'package:rapatory/src/widgets/widget_background_video.dart';
 import 'package:rapatory/src/widgets/widget_loading_screen.dart';
 
 var _scaffoldState = GlobalKey<ScaffoldState>();
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  @override
+  _LoginScreenState createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  LoginBloc _loginBloc;
+  SplashBloc _splashBloc;
+
+  @override
+  void initState() {
+    _loginBloc = LoginBloc();
+    _splashBloc = SplashBloc();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _splashBloc.dispatch(SplashEvent());
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,14 +42,36 @@ class LoginScreen extends StatelessWidget {
   }
 
   Widget _buildWidgetButtonLogin() {
-    return BlocProvider(
-      builder: (context) {
-        return LoginBloc();
-      },
-      child: BlocListener<LoginBloc, LoginState>(
-        listener: (context, state) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<LoginBloc>(
+          builder: (context) => _loginBloc,
+        ),
+        BlocProvider<SplashBloc>(
+          builder: (context) => _splashBloc,
+        ),
+      ],
+      child: MultiBlocListener(
+        /*listener: (context, state) {
           _checkListenerStatusLogin(state);
-        },
+        },*/
+        listeners: [
+          BlocListener<LoginBloc, LoginState>(
+            listener: (context, state) {
+              _checkListenerStatusLogin(state);
+            },
+          ),
+          BlocListener<SplashBloc, SplashState>(
+            listener: (context, state) {
+              if (state is SplashSuccess) {
+                bool isLogin = state.isLogin;
+                if (isLogin) {
+                  _navigatorToHomeScreen();
+                }
+              }
+            },
+          ),
+        ],
         child: BlocBuilder<LoginBloc, LoginState>(
           builder: (context, state) {
             return SafeArea(
@@ -79,16 +120,19 @@ class LoginScreen extends StatelessWidget {
         ),
       );
     } else if (state is LoginSuccess) {
-      Navigator.pushNamed(_scaffoldState.currentContext, '/home');
+      _navigatorToHomeScreen();
     }
+  }
+
+  void _navigatorToHomeScreen() {
+    Navigator.pushNamedAndRemoveUntil(_scaffoldState.currentContext, '/home', (route) => false);
   }
 
   Widget _buildWidgetButtonLoginTwitter(BuildContext context) {
     return RaisedButton(
       padding: EdgeInsets.zero,
       onPressed: () {
-        final LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
-        loginBloc.dispatch(LoginEvent(typeLogin: TypeLogin.twitter));
+        _loginBloc.dispatch(LoginEvent(typeLogin: TypeLogin.twitter));
       },
       child: Row(
         children: <Widget>[
@@ -122,8 +166,7 @@ class LoginScreen extends StatelessWidget {
     return RaisedButton(
       padding: EdgeInsets.zero,
       onPressed: () {
-        final LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
-        loginBloc.dispatch(LoginEvent(typeLogin: TypeLogin.facebook));
+        _loginBloc.dispatch(LoginEvent(typeLogin: TypeLogin.facebook));
       },
       child: Row(
         children: <Widget>[
