@@ -20,7 +20,7 @@ class LoginSuccess extends LoginState {}
 class LoginFailed extends LoginState {
   final String errorMessage;
 
-  LoginFailed({this.errorMessage});
+  LoginFailed(this.errorMessage);
 }
 
 class LoginEvent {
@@ -59,7 +59,7 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               (await firebaseAuth.signInWithCredential(credential)).user;
           if (firebaseUser != null) {
             LoginBody loginBody =
-                LoginBody(typeLogin: 'twitter', username: session.username);
+                LoginBody(typeLogin: 'twitter', username: session.username, password: token);
             LoginResponse loginResponse =
                 await apiRepository.sendLoginUser(loginBody);
             if (loginResponse != null) {
@@ -67,20 +67,20 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
               yield LoginSuccess();
             } else {
               await updateSharedPreferencesLogin(false);
-              yield LoginFailed(errorMessage: loginResponse.message);
+              yield LoginFailed(loginResponse.message);
             }
           } else {
             await updateSharedPreferencesLogin(false);
-            yield LoginFailed(errorMessage: 'User not found');
+            yield LoginFailed('User not found');
           }
           break;
         case TwitterLoginStatus.cancelledByUser:
           await updateSharedPreferencesLogin(false);
-          yield LoginFailed(errorMessage: 'Login cancelled by user');
+          yield LoginFailed('Login cancelled by user');
           break;
         case TwitterLoginStatus.error:
           await updateSharedPreferencesLogin(false);
-          yield LoginFailed(errorMessage: '${result.errorMessage}');
+          yield LoginFailed('${result.errorMessage}');
           break;
       }
     } else if (event.typeLogin == TypeLogin.facebook) {
@@ -88,19 +88,31 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       final result = await facebookLogin.logIn(['email']);
       switch (result.status) {
         case FacebookLoginStatus.loggedIn:
-          // TODO: do something in here when sign in with Facebook success
+          String token = result.accessToken.token;
+          String userId = result.accessToken.userId;
+          LoginBody loginBody = LoginBody(typeLogin: 'facebook', username: userId, password: token);
+          LoginResponse loginResponse = await apiRepository.sendLoginUser(loginBody);
+          if (loginResponse != null) {
+            await updateSharedPreferencesLogin(true);
+            yield LoginSuccess();
+          } else {
+            await updateSharedPreferencesLogin(false);
+            yield LoginFailed(loginResponse.message);
+          }
           break;
         case FacebookLoginStatus.cancelledByUser:
-          // TODO: do something in here when sign in with Facebook cancelled by user
+          await updateSharedPreferencesLogin(false);
+          yield LoginFailed('Login cancelled by user');
           break;
         case FacebookLoginStatus.error:
-          // TODO: do something in here when sign in with Facebook error
+          await updateSharedPreferencesLogin(false);
+          yield LoginFailed('${result.errorMessage}');
           break;
       }
     } else if (event.typeLogin == TypeLogin.google) {
       // TODO: do something in here
     } else {
-      yield LoginFailed(errorMessage: 'Unknown type login');
+      yield LoginFailed('Unknown type login');
     }
   }
 

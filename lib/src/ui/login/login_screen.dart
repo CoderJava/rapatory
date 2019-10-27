@@ -47,7 +47,7 @@ class LoginScreen extends StatelessWidget {
                       children: <Widget>[
                         _buildWidgetButtonLoginTwitter(context),
                         SizedBox(height: 8.0),
-                        _buildWidgetButtonLoginFacebook(),
+                        _buildWidgetButtonLoginFacebook(context),
                         SizedBox(height: 8.0),
                         _buildWidgetButtonLoginGoogle(),
                       ],
@@ -118,11 +118,12 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildWidgetButtonLoginFacebook() {
+  Widget _buildWidgetButtonLoginFacebook(BuildContext context) {
     return RaisedButton(
       padding: EdgeInsets.zero,
       onPressed: () {
-        // TODO: do something in here
+        final LoginBloc loginBloc = BlocProvider.of<LoginBloc>(context);
+        loginBloc.dispatch(LoginEvent(typeLogin: TypeLogin.facebook));
       },
       child: Row(
         children: <Widget>[
