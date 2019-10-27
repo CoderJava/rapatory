@@ -89,15 +89,22 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       switch (result.status) {
         case FacebookLoginStatus.loggedIn:
           String token = result.accessToken.token;
-          String userId = result.accessToken.userId;
-          LoginBody loginBody = LoginBody(typeLogin: 'facebook', username: userId, password: token);
-          LoginResponse loginResponse = await apiRepository.sendLoginUser(loginBody);
-          if (loginResponse != null) {
-            await updateSharedPreferencesLogin(true);
-            yield LoginSuccess();
+          AuthCredential credential = FacebookAuthProvider.getCredential(accessToken: token);
+          FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+          FirebaseUser firebaseUser = (await firebaseAuth.signInWithCredential(credential)).user;
+          if (firebaseUser != null) {
+            LoginBody loginBody = LoginBody(typeLogin: 'facebook', username: firebaseUser.email, password: token);
+            LoginResponse loginResponse = await apiRepository.sendLoginUser(loginBody);
+            if (loginResponse != null) {
+              await updateSharedPreferencesLogin(true);
+              yield LoginSuccess();
+            } else {
+              await updateSharedPreferencesLogin(false);
+              yield LoginFailed(loginResponse.message);
+            }
           } else {
             await updateSharedPreferencesLogin(false);
-            yield LoginFailed(loginResponse.message);
+            yield LoginFailed('user not found');
           }
           break;
         case FacebookLoginStatus.cancelledByUser:

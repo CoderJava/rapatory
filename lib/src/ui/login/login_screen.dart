@@ -52,9 +52,6 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ],
       child: MultiBlocListener(
-        /*listener: (context, state) {
-          _checkListenerStatusLogin(state);
-        },*/
         listeners: [
           BlocListener<LoginBloc, LoginState>(
             listener: (context, state) {
