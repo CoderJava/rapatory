@@ -4,6 +4,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_twitter_login/flutter_twitter_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rapatory/src/api/api_repository.dart';
+import 'package:rapatory/src/api/key/secret_loader.dart';
 import 'package:rapatory/src/model/login/login_body.dart';
 import 'package:rapatory/src/model/login/login_response.dart';
 import 'package:rapatory/src/storage/sharedpreferences/shared_preferences_manager.dart';
@@ -43,9 +44,10 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     final ApiRepository apiRepository = ApiRepository();
     if (event.typeLogin == TypeLogin.twitter) {
       yield LoginLoading();
+      var secret = await SecretLoader(secretPath: 'secrets.json').load();
       var twitterLogin = TwitterLogin(
-        consumerKey: '0LFgIbMd0onKleprkoGvVWv0J',
-        consumerSecret: 'KzqzH7JnsQjzfDGT49fPsvRI6mqarj5YJhAxQBEixy0zgD4H6l',
+        consumerKey: secret.twitterConsumerKey,
+        consumerSecret: secret.twitterConsumerSecret,
       );
       final result = await twitterLogin.authorize();
       switch (result.status) {
