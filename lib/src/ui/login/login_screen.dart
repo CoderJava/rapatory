@@ -22,9 +22,9 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     _loginBloc = LoginBloc();
     _splashBloc = SplashBloc();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    /*WidgetsBinding.instance.addPostFrameCallback((_) {
       _splashBloc.dispatch(SplashEvent());
-    });
+    });*/
     super.initState();
   }
 
@@ -197,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
     return RaisedButton(
       padding: EdgeInsets.zero,
       onPressed: () {
-        // TODO: do something in here
+        _loginBloc.dispatch(LoginEvent(typeLogin: TypeLogin.google));
       },
       child: Row(
         children: <Widget>[

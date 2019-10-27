@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>930927884979-e7700i43l6uou0plldl8s6chgamql15k.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.930927884979-e7700i43l6uou0plldl8s6chgamql15k</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>930927884979-s3b9co4f3o52b4j4inu2nbgcavh1hb7c.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCqsF-DGuwZdkuLa0VF5n3eMufHApMBfSw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>930927884979</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.ysn.rapatory</string>
+	<key>PROJECT_ID</key>
+	<string>rapatory</string>
+	<key>STORAGE_BUCKET</key>
+	<string>rapatory.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:930927884979:ios:ce95d93111cd12d3a84ec6</string>
+	<key>DATABASE_URL</key>
+	<string>https://rapatory.firebaseio.com</string>
+</dict>
+</plist>

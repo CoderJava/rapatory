@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_twitter_login/flutter_twitter_login.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rapatory/src/api/api_repository.dart';
 import 'package:rapatory/src/model/login/login_body.dart';
 import 'package:rapatory/src/model/login/login_response.dart';
@@ -53,15 +54,13 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           var token = session.token;
           var secret = session.secret;
           FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-          AuthCredential credential = TwitterAuthProvider.getCredential(
-              authToken: token, authTokenSecret: secret);
-          FirebaseUser firebaseUser =
-              (await firebaseAuth.signInWithCredential(credential)).user;
+          AuthCredential credential =
+              TwitterAuthProvider.getCredential(authToken: token, authTokenSecret: secret);
+          FirebaseUser firebaseUser = (await firebaseAuth.signInWithCredential(credential)).user;
           if (firebaseUser != null) {
             LoginBody loginBody =
                 LoginBody(typeLogin: 'twitter', username: session.username, password: token);
-            LoginResponse loginResponse =
-                await apiRepository.sendLoginUser(loginBody);
+            LoginResponse loginResponse = await apiRepository.sendLoginUser(loginBody);
             if (loginResponse != null) {
               await updateSharedPreferencesLogin(true);
               yield LoginSuccess();
@@ -93,7 +92,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           FirebaseAuth firebaseAuth = FirebaseAuth.instance;
           FirebaseUser firebaseUser = (await firebaseAuth.signInWithCredential(credential)).user;
           if (firebaseUser != null) {
-            LoginBody loginBody = LoginBody(typeLogin: 'facebook', username: firebaseUser.email, password: token);
+            LoginBody loginBody =
+                LoginBody(typeLogin: 'facebook', username: firebaseUser.email, password: token);
             LoginResponse loginResponse = await apiRepository.sendLoginUser(loginBody);
             if (loginResponse != null) {
               await updateSharedPreferencesLogin(true);
@@ -117,7 +117,34 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
           break;
       }
     } else if (event.typeLogin == TypeLogin.google) {
-      // TODO: do something in here
+      GoogleSignIn googleSignIn = GoogleSignIn(
+        scopes: [
+          'email',
+          'https://www.googleapis.com/auth/contacts.readonly',
+        ],
+      );
+      GoogleSignInAccount googleUser = await googleSignIn.signIn();
+      GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      AuthCredential credential = GoogleAuthProvider.getCredential(
+        idToken: googleAuth.idToken,
+        accessToken: googleAuth.accessToken,
+      );
+      FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+      FirebaseUser firebaseUser = (await firebaseAuth.signInWithCredential(credential)).user;
+      if (firebaseUser != null) {
+        LoginBody loginBody = LoginBody(typeLogin: 'google', username: firebaseUser.email, password: googleAuth.accessToken);
+        LoginResponse loginResponse = await apiRepository.sendLoginUser(loginBody);
+        if (loginResponse != null) {
+          await updateSharedPreferencesLogin(true);
+          yield LoginSuccess();
+        } else {
+          await updateSharedPreferencesLogin(false);
+          yield LoginFailed(loginResponse.message);
+        }
+      } else {
+        await updateSharedPreferencesLogin(false);
+        yield LoginFailed('user not found');
+      }
     } else {
       yield LoginFailed('Unknown type login');
     }
@@ -126,7 +153,6 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
   Future<bool> updateSharedPreferencesLogin(bool loginSuccess) async {
     final SharedPreferencesManager sharedPreferencesManager =
         await SharedPreferencesManager.getInstance();
-    return await sharedPreferencesManager.putBool(
-        SharedPreferencesManager.keyIsLogin, true);
+    return await sharedPreferencesManager.putBool(SharedPreferencesManager.keyIsLogin, true);
   }
 }
