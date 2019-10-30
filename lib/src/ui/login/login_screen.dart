@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rapatory/src/bloc/login/login_bloc.dart';
 import 'package:rapatory/src/bloc/splash/splash_bloc.dart';
+import 'package:rapatory/src/utils/route_keys.dart';
 import 'package:rapatory/src/widgets/widget_background_video.dart';
 import 'package:rapatory/src/widgets/widget_loading_screen.dart';
 
@@ -63,7 +64,7 @@ class _LoginScreenState extends State<LoginScreen> {
               if (state is SplashSuccess) {
                 bool isLogin = state.isLogin;
                 if (isLogin) {
-                  _navigatorToHomeScreen();
+                  _navigatorToDashboardScreen();
                 }
               }
             },
@@ -117,12 +118,12 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       );
     } else if (state is LoginSuccess) {
-      _navigatorToHomeScreen();
+      _navigatorToDashboardScreen();
     }
   }
 
-  void _navigatorToHomeScreen() {
-    Navigator.pushNamedAndRemoveUntil(_scaffoldState.currentContext, '/home', (route) => false);
+  void _navigatorToDashboardScreen() {
+    Navigator.pushNamedAndRemoveUntil(_scaffoldState.currentContext, RouteKeys.routeDashboard, (route) => false);
   }
 
   Widget _buildWidgetButtonLoginTwitter(BuildContext context) {
