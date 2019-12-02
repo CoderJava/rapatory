@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rapatory/res/values/color_app.dart';
+import 'package:rapatory/src/ui/dashboard_event/dashboard_events_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -53,11 +54,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Widget _buildWidgetBody() {
     if (_currentIndexBottomNavigationBar == 0) {
-      return Container(
-        child: Center(
-          child: Text('Dashboard Events'),
-        ),
-      );
+      return DashboardEventsScreen();
     } else if (_currentIndexBottomNavigationBar == 1) {
       return Container(
         child: Center(

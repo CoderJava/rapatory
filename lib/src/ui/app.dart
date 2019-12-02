@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rapatory/res/values/color_app.dart';
 import 'package:rapatory/src/ui/dashboard/dashboard_screen.dart';
+import 'package:rapatory/src/ui/dashboard_event/dashboard_events_screen.dart';
 import 'package:rapatory/src/ui/login/login_screen.dart';
 import 'package:rapatory/src/utils/route_keys.dart';
 
@@ -15,7 +16,7 @@ class App extends StatelessWidget {
       ),
       routes: {
         RouteKeys.routeDashboard: (context) => DashboardScreen(),
-        /*RouteKeys.routeDashboardEvents: (context) => DashboardEventsScreen(),*/
+        RouteKeys.routeDashboardEvents: (context) => DashboardEventsScreen(),
       },
       home: LoginScreen(),
     );
