@@ -37,7 +37,7 @@ dependencies:
 
   # Powerful HTTP client for Dart, which supports interceptors, FormData, Request Cancellation,
   # File Downloading, Timeout etc.
-  dio: ^3.0.3
+  dio: ">=3.0.3 <6.0.0"
 
   # Automatically generate code for converting to and from JSON by annotating Dart classes.
   json_serializable: ^3.2.3
